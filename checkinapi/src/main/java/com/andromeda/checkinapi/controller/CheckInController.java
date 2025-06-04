@@ -3,9 +3,12 @@ package com.andromeda.checkinapi.controller;
 import com.andromeda.checkinapi.model.CheckIn;
 import com.andromeda.checkinapi.repository.CheckInRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/checkin")
@@ -24,5 +27,16 @@ public class CheckInController {
     @GetMapping
     public List<CheckIn> obtenerTodos() {
         return repository.findAll();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> eliminarCheckIn(@PathVariable Long id) {
+        Optional<CheckIn> checkIn = repository.findById(id);
+        if (checkIn.isPresent()) {
+            repository.deleteById(id);
+            return ResponseEntity.ok("Check-in eliminado correctamente");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Check-in no encontrado");
+        }
     }
 }
