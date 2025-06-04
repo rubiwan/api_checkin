@@ -25,4 +25,15 @@ public class CheckInController {
     public List<CheckIn> obtenerTodos() {
         return repository.findAll();
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> eliminarCheckIn(@PathVariable Long id) {
+        Optional<CheckIn> checkIn = repository.findById(id);
+        if (checkIn.isPresent()) {
+            repository.deleteById(id);
+            return ResponseEntity.ok("Check-in eliminado correctamente");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Check-in no encontrado");
+        }
+    }
 }
